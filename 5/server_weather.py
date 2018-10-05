@@ -11,7 +11,7 @@
     Передача параметров методом GET
 """
 from datetime import datetime
-from flask import Flask, abort
+from flask import Flask, abort, request
 from get_weather import get_current
 
 city_id = 524901
@@ -52,6 +52,22 @@ def index():
     return result
 
 
+@app.route("/news")
+def news_by_params():
+    for item in request.args:
+        print(item)
+        print(request.args.get(item))
+    try:
+        limit = int(request.args.get('limit', 'all'))
+    except:
+        limit = 1
+    colors = ['red', 'green', 'blue']
+    color = request.args.get('color')
+    if color not in colors:
+       color = 'black'
+    return f'<h1 style=\"color: {color}\">News: {limit}</h1>'
+
+
 @app.route("/news/<int:news_id>")
 def show_news(news_id):
     news_to_show = [news for news in news_list if news['id'] == news_id]
@@ -60,6 +76,8 @@ def show_news(news_id):
         return output % news_to_show[0]
     else:
         abort(404)
+
+
 
 
 if __name__ == "__main__":
