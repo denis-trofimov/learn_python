@@ -6,6 +6,7 @@ import settings
 
 
 def image_classification(file_name):
+    """ Add ClarifaiApp call for image_classification"""
     app = ClarifaiApp(api_key=settings.CLARIFAI_API_KEY)
     model = app.public_models.general_model
     response = model.predict_by_filename(file_name, max_concepts=5)
