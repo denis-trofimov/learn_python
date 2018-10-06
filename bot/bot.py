@@ -5,18 +5,12 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
 import logging
 import datetime
-
-
-# Настройки прокси
-PROXY = {
-    'proxy_url': 'socks5://t1.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}
-}
+import settings
 
 
 """Функция, которая соединяется с платформой Telegram, "тело" нашего бота"""
 def main():
-    updater = Updater(open("api.token").readline(), request_kwargs=PROXY)
+    updater = Updater(settings.TELEGRAM_API_KEY, request_kwargs=settings.PROXY)
 
     dispatcher = updater.dispatcher
 
@@ -24,7 +18,7 @@ def main():
     dispatcher.add_handler(CommandHandler("planet", planet))
     dispatcher.add_handler(CommandHandler("wordcount", wordcount))
     dispatcher.add_handler(MessageHandler(Filters.text,echo))
-    
+
     updater.start_polling()
     updater.idle()
 
@@ -44,7 +38,7 @@ def echo(bot, update):
 """Reply given planet constellation position now."""
 def planet(bot, update):
     words = update.message.text.split()
-    text = 'No such planet name!' 
+    text = 'No such planet name!'
     if len(words) > 1:
         words[1] = words[1].lower().capitalize()
         try:
@@ -62,11 +56,11 @@ def planet(bot, update):
 """Count total words in double quotes."""
 def wordcount(bot, update):
     text = update.message.text
-    
+
     responce = "Insert text in double quotes, please."
     opening_quote_index = text.find('"')
     closing_quote_index = text.find('"', opening_quote_index + 1)
-    
+
     if opening_quote_index > 0 and opening_quote_index < closing_quote_index:
         quoted_text = text[opening_quote_index + 1:closing_quote_index]
         word_list = quoted_text.split()
@@ -81,6 +75,6 @@ if __name__ == "__main__":
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.WARNING
     )
-    
+
     # Вызываем функцию - эта строчка собственно запускает бота
     main()
