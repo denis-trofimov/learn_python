@@ -1,11 +1,10 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import pprint
+# import pprint
 from clarifai.rest import ClarifaiApp
 import settings
 
 
-def image_classification(file_name):
+def is_cat(file_name):
     """ Add ClarifaiApp call for image_classification"""
     is_cat = False
     app = ClarifaiApp(api_key=settings.CLARIFAI_API_KEY)
@@ -21,6 +20,6 @@ def image_classification(file_name):
 
 
 if __name__ == "__main__":
-#    image_classification('images/cat1.jpg')
-    if image_classification('2017-10-14 14-25-04.JPG'):
+#    is_cat('images/cat1.jpg')
+    if is_cat('2017-10-14 14-25-04.JPG'):
         print('Have cat!')

@@ -1,4 +1,3 @@
-#!./env/bin/python
 # -*- coding: UTF-8 -*-
 import logging
 import datetime
@@ -8,6 +7,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
 
 import settings
+from utils import is_cat
 
 
 """Функция, которая соединяется с платформой Telegram, "тело" нашего бота"""
@@ -19,10 +19,33 @@ def main():
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("planet", planet))
     dispatcher.add_handler(CommandHandler("wordcount", wordcount))
-    dispatcher.add_handler(MessageHandler(Filters.text,echo))
+    dispatcher.add_handler(MessageHandler(Filters.text, echo))
+    dispatcher.add_handler(MessageHandler(
+        Filters.photo, check_user_photo, pass_user_data=True))
+
 
     updater.start_polling()
     updater.idle()
+
+
+"""Check that cat is on received photo."""
+def check_user_photo(bot, update, user_data):
+    update.message.reply_text('Обрататывается фото...')
+    os.makedirs('downloads', exist_ok=True)
+    photo_file = bot.getFile(update.message.photo[-1].file_id
+    )
+    filename = os.path.join('downloads', f'{photo_file.file_id}.jpg')
+    photo_file.download(filename)
+    update.message.reply_text('Файл сохранен.')
+    if is_cat(filename):
+        update.message.reply_text('Найдена кошатина! Добавляю в библиотеку.')
+        os.makedirs('images', exist_ok=True)
+        new_file_name = os.path.join(
+            'images', f'cat_{photo_file.file_id}.jpg')
+        os.rename(filename, new_file_name)
+    else:
+        update.message.reply_text('Это не кошка и не кот, 100 пудов!')
+        os.remove(filename)
 
 
 def start(bot, update):
