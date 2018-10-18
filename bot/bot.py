@@ -1,10 +1,12 @@
-#!/usr/bin/python
+#!./env/bin/python
 # -*- coding: UTF-8 -*-
-# Импортируем нужные компоненты
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import ephem
 import logging
 import datetime
+import os
+
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import ephem
+
 import settings
 
 
