@@ -2,6 +2,8 @@
 import logging
 import datetime
 import os
+from glob import glob
+from random import choice
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
@@ -19,6 +21,7 @@ def main():
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("planet", planet))
     dispatcher.add_handler(CommandHandler("wordcount", wordcount))
+    dispatcher.add_handler(CommandHandler('cat', send_cat_image))
     dispatcher.add_handler(MessageHandler(Filters.text, echo))
     dispatcher.add_handler(MessageHandler(
         Filters.photo, check_user_photo, pass_user_data=True))
@@ -26,6 +29,13 @@ def main():
 
     updater.start_polling()
     updater.idle()
+
+
+"""Send random cat image."""
+def send_cat_image(bot, update):
+    cat_files = glob('images/cat*')
+    filename = choice(cat_files)
+    bot.send_photo(chat_id=update.message.chat_id, photo=open(filename, 'rb'))
 
 
 """Check that cat is on received photo."""
