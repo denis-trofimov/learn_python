@@ -97,6 +97,13 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# Eric IDE project settings
+*.e4p
+*.e5p
+*.e6p
+.eric5project/
+.eric6project/
+
 # mkdocs documentation
 /site
 
@@ -106,3 +113,4 @@ venv.bak/
 .idea
 *.token
 lessons_mirror
+*.csv
