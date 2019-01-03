@@ -4,8 +4,10 @@
 
 
 import requests
+CITY_ID = 524901
+APP_ID = "2da387b1f95b2443f187149f77e9f4a8"
 
-def get_current(city_id, appid):
+def get_weather(city_id, appid):
     """ Get current weather.
 
         :returns: current weather``dict``
@@ -14,13 +16,11 @@ def get_current(city_id, appid):
     params = {"id": city_id, "appid": appid, "units": "metric"}
     responce = requests.get(url, params=params)
     if responce.status_code == 200:
-        return responce.json()
+        return f"Сейчас {responce.json()['main']['temp']} C"
     else:
         raise Exception(f"Error: {responce.status_code} {responce.reason}")
 
 
 if __name__ == "__main__":
-    city_id=524901
-    appid="2da387b1f95b2443f187149f77e9f4a8"
-    data_weather = get_current(city_id, appid)
-    print(f"Temp: {data_weather['main']['temp']} C")
+    text_weather = get_weather(CITY_ID, APP_ID)
+    print(text_weather)
